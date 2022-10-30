@@ -1,0 +1,7 @@
+mutation ToggleFavoriteMutation($entityRef: String) {
+  toggleFavorite(entityRef: $entityRef) {
+    ... on Component {
+      favorite
+    }
+  }
+}

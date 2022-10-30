@@ -1,0 +1,14 @@
+apiVersion: backstage.io/v1alpha1
+kind: Plugin
+routes:
+  services:
+    params:
+      pageSize:
+        - type: number
+      cursor:
+        - type: string
+      q:
+        - type: string
+    layout:
+      $file: ./CatalogServicesLayout.yaml
+    

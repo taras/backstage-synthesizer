@@ -1,0 +1,67 @@
+apiVersion: backstage.io/v1alpha1
+kind: Layout
+metadata:
+  name: CatalogServices
+queries:
+  data:
+    query:
+      $file: ./CatalogServicesQuery.graphql
+    variables:
+      q: ${{ params.q }}
+      pageSize: ${{ params.pageSize }}
+      cursor: ${{ params.cursor }}
+mutations:
+  toggleFavorite:
+    $file: ./ToggleFavoriteMutation.graphql
+content:
+  # see: https://github.com/backstage/backstage/blob/master/plugins/catalog/src/components/CatalogTable/CatalogTable.tsx
+  - component: container
+    content:
+      - component: Box
+        xs: 6
+        content: Systems
+      - component: Box
+        xs: 6
+        content:
+          - component: FilterInput
+            submit: "${{ page.navigate({ q: input }) }}"
+  - component: Table
+    isLoading: ${{ queries.data.loading }}
+    items: ${{ queries.data.nodes }}
+    columns:
+      - title: Name
+        content: ${{ item.name }}
+      - title: System
+        content:
+          - component: Link
+            content: ${{ item.system.name }}
+            to: ${{ item.system.url }}
+      - title: Owner
+        content:
+          - component: Link
+            content: ${{ item.owner.name }}
+            to: ${{ item.owner.url }}
+      - title: Lifecycle
+        content: ${{ item.lifecycle }}
+      - title: Description
+        content: ${{ item.description }}
+      - title: Tags
+        content: 
+          - component: List
+            yield: # called for each item in the list
+              - component: Chip
+                content: ${{ item }}
+      - title: Actions
+        content:
+          - component: IconLink
+            icon: view
+            tooltip: View
+            to: ${{ item.url }}
+          - component: IconLink
+            icon: edit
+            tooltip: Edit
+            to: ${{ item.editUrl }}
+          - component: IconLink
+            icon: star
+            fill: ${{ "yellow" if item.favorite }}
+            click: ${{ mutations.toggleFavorite(item.ref) }} 

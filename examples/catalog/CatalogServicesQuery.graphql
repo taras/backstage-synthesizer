@@ -1,0 +1,23 @@
+query CatalogSystemsQuery($q: String, $cursor: String, $pageSize: Int = 100) {
+  catalog(first: $pageSize, after: $cursor, q: $q) {
+    nodes {
+      ... on SystemComponent {
+        name
+        ref
+        url
+        editUrl
+        description
+        favorite
+        owner {
+          name
+          url
+        }
+        system {
+          name
+          url
+        }
+
+      }
+    }
+  }
+}
